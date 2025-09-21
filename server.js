@@ -3,8 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import contactRoutes from "./routes/contactRoutes.js";
-import { errorHandler } from "./middleware/errorMiddleware.js";
+import contactRoutes from "../routes/contactRoutes.js";
+import { errorHandler } from "../middleware/errorMiddleware.js";
 
 dotenv.config();
 
