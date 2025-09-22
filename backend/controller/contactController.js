@@ -21,12 +21,20 @@ export const sendContactMessage = async (req, res, next) => {
     to: process.env.EMAIL_USER,
     subject: `Portfolio Message from ${name}`,
     text: message,
+    html: `
+      <h2>New Message from Portfolio Contact Form</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message}</p>
+    `,
   };
 
   try {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: "Message sent successfully!" });
   } catch (error) {
+    console.error('Email error:', error);
     next(error);
   }
 };
