@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export const sendContactMessage = async (req, res, next) => {
+export const sendContactMessage = async (req, res) => {
   console.log('📧 Contact form submission received:', req.body);
   const { name, email, message } = req.body;
 
@@ -17,8 +17,9 @@ export const sendContactMessage = async (req, res, next) => {
   });
 
   const mailOptions = {
-    from: email,
-    to: process.env.EMAIL_USER,
+    from: process.env.EMAIL_USER,      // Gmail account as sender
+    replyTo: email,                    // User email for reply
+    to: process.env.EMAIL_USER,        // Your email
     subject: `Portfolio Message from ${name}`,
     text: message,
     html: `
@@ -34,7 +35,7 @@ export const sendContactMessage = async (req, res, next) => {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: "Message sent successfully!" });
   } catch (error) {
-    console.error('Email error:', error);
-    next(error);
+    console.error('❌ Email sending failed:', error);
+    res.status(500).json({ message: "Failed to send message", error: error.message });
   }
 };
