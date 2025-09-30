@@ -16,25 +16,25 @@ const __dirname = path.dirname(__filename);
 
 // ✅ CORS configuration - dynamic origins
 const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? [
-      'https://your-frontend-domain.onrender.com',
-      'https://your-app-domain.onrender.com'
-    ]
+  ? '*'
   : ['http://localhost:5173', 'http://localhost:5000'];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman)
+    // Allow requests with no origin (Postman, mobile apps)
     if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+
+    // In production, allow all
+    if (allowedOrigins === '*' || allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
     }
-    return callback(null, true);
+
+    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
   },
   credentials: true
 }));
+
 
 app.use(express.json());
 
@@ -47,9 +47,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(frontendPath));
   
   // ✅ Serve root route first
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-  });
+  // app.get('/', (req, res) => {
+  //   res.sendFile(path.join(frontendPath, 'index.html'));
+  // });
 
   // ✅ Catch-all route for SPA routing (should come after specific routes)
   app.get('*', (req, res) => {
