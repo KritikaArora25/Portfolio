@@ -49,9 +49,10 @@ if (process.env.NODE_ENV === 'production') {
  
 
   // ✅ Catch-all route for SPA routing (should come after specific routes)
-  app.get('/*', (req, res) => {
+  app.get('/:path(.*)', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
+
 }
 
 // ✅ Error handling middleware (should be after all routes)
