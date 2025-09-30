@@ -46,16 +46,13 @@ if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, "dist");
   app.use(express.static(frontendPath));
   
-  // ✅ Serve root route first
-  // app.get('/', (req, res) => {
-  //   res.sendFile(path.join(frontendPath, 'index.html'));
-  // });
+ 
 
   // ✅ Catch-all route for SPA routing (should come after specific routes)
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-  });
-} // ← Missing brace added here
+  app.get('/*', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
+}
 
 // ✅ Error handling middleware (should be after all routes)
 app.use(errorHandler);
